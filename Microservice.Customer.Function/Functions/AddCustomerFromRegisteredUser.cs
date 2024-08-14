@@ -11,10 +11,9 @@ public class AddCustomerFromRegisteredUser(ILogger<AddCustomerFromRegisteredUser
 {
     private ILogger<AddCustomerFromRegisteredUser> _logger { get; set; } = logger; 
     private IMediator _mediator { get; set; } = mediator;
-
-
+     
     [Function(nameof(AddCustomerFromRegisteredUser))]
-    public async Task Run([ServiceBusTrigger(Constants.RegisteredUserCustomerSBQueue, 
+    public async Task Run([ServiceBusTrigger("%" + Constants.AzureServiceBusQueueRegisteredUserCustomer + "%",  
                                              Connection = Constants.AzureServiceBusConnection)]
                            ServiceBusReceivedMessage message,
                            ServiceBusMessageActions messageActions)
