@@ -20,7 +20,7 @@ var host = new HostBuilder()
     {
         c.AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
             .AddEnvironmentVariables();
-    })
+    }) 
     .ConfigureServices(services =>
     {
         services.AddApplicationInsightsTelemetryWorkerService();
