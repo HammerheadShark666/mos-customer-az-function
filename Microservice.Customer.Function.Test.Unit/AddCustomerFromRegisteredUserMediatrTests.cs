@@ -75,7 +75,7 @@ public class AddCustomerFromRegisteredUserMediatrTests
         });
 
         Assert.That(validationException.Errors.Count, Is.EqualTo(1));
-        Assert.That(validationException.Errors.ElementAt(0).ErrorMessage, Is.EqualTo("Customer with this id already exists"));
+        Assert.That(validationException.Errors.ElementAt(0).ErrorMessage, Is.EqualTo("Customer with this id already exists."));
     }
 
     [Test]
