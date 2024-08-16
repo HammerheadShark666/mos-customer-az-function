@@ -13,7 +13,7 @@ public class AddCustomerValidator : AbstractValidator<AddCustomerRequest>
 
         RuleFor(registerUserRequest => registerUserRequest).MustAsync(async (registerUserRequest, cancellation) => {
             return await CustomerIdExists(registerUserRequest.Id);
-        }).WithMessage("Customer with this id already exists");
+        }).WithMessage("Customer with this id already exists.");
 
         RuleFor(registerUserRequest => registerUserRequest.Email)
                 .NotEmpty().WithMessage("Email is required.")
