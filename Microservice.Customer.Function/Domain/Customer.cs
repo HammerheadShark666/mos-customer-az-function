@@ -6,20 +6,20 @@ namespace Microservice.Customer.Function.Domain;
 [Table("MSOS_Customer")]
 public class Customer
 {
-    [Key] 
+    [Key]
     public Guid Id { get; set; }
 
     [MaxLength(30)]
     [Required]
-    public string Surname { get; set; }
+    public string Surname { get; set; } = string.Empty;
 
     [MaxLength(30)]
     [Required]
-    public string FirstName { get; set; }
+    public string FirstName { get; set; } = string.Empty;
 
     [EmailAddress]
     [Required]
-    public string Email { get; set; }
+    public string Email { get; set; } = string.Empty;
 
     [Required]
     public DateTime Created { get; set; } = DateTime.Now;

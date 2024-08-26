@@ -1,7 +1,6 @@
 using FluentValidation;
 using MediatR;
 using Microservice.Customer.Function.Data.Context;
-using Microservice.Customer.Function.Data.Contexts;
 using Microservice.Customer.Function.Data.Repository;
 using Microservice.Customer.Function.Data.Repository.Interfaces;
 using Microservice.Customer.Function.Helpers;
@@ -14,13 +13,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
 
-var host = new HostBuilder()   
+var host = new HostBuilder()
     .ConfigureFunctionsWebApplication()
     .ConfigureAppConfiguration(c =>
     {
         c.AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
             .AddEnvironmentVariables();
-    }) 
+    })
     .ConfigureServices(services =>
     {
         services.AddApplicationInsightsTelemetryWorkerService();

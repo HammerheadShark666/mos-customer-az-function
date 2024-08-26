@@ -10,11 +10,11 @@ public class AddCustomerCommandHandler(ICustomerRepository customerRepository,
     private ICustomerRepository _customerRepository { get; set; } = customerRepository;
     private IMapper _mapper { get; set; } = mapper;
 
-    private string CustomerAddedMessage = "Customer Added.";
+    private readonly string CustomerAddedMessage = "Customer Added.";
 
     public async Task<AddCustomerResponse> Handle(AddCustomerRequest addCustomerRequest, CancellationToken cancellationToken)
     {
-        var customer = _mapper.Map<Domain.Customer>(addCustomerRequest); 
+        var customer = _mapper.Map<Domain.Customer>(addCustomerRequest);
         await _customerRepository.AddAsync(customer);
 
         return new AddCustomerResponse(CustomerAddedMessage);

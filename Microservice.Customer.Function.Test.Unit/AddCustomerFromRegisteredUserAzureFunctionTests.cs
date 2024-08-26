@@ -13,17 +13,17 @@ public class AddCustomerFromRegisteredUserAzureFunctionTests
 {
     private readonly Mock<IMediator> _mockMediator;
     private readonly Mock<ILogger<AddCustomerFromRegisteredUser>> _mockLogger;
-    private readonly AddCustomerFromRegisteredUser _addCustomerFromRegisteredUser; 
-    
+    private readonly AddCustomerFromRegisteredUser _addCustomerFromRegisteredUser;
+
     public AddCustomerFromRegisteredUserAzureFunctionTests()
     {
         _mockMediator = new Mock<IMediator>();
         _mockLogger = new Mock<ILogger<AddCustomerFromRegisteredUser>>();
         _addCustomerFromRegisteredUser = new AddCustomerFromRegisteredUser(_mockLogger.Object, _mockMediator.Object);
-    }     
+    }
 
     [Test]
-    public async Task Azure_function_trigger_service_bus_recieve_return_succeed()
+    public async Task Azure_function_trigger_service_bus_receive_return_succeed()
     {
         var addCustomerRequest = new AddCustomerRequest(Guid.NewGuid(), "ValidEmail@hotmail.com", "TestSurname", "TestFirstName");
 
@@ -31,7 +31,7 @@ public class AddCustomerFromRegisteredUserAzureFunctionTests
 
         var mockServiceBusMessageActions = new Mock<ServiceBusMessageActions>();
         mockServiceBusMessageActions.Setup(x => x.CompleteMessageAsync(mockMessage, CancellationToken.None)).Returns(Task.FromResult(true));
-          
-        await _addCustomerFromRegisteredUser.Run(mockMessage, mockServiceBusMessageActions.Object);        
-    } 
+
+        await _addCustomerFromRegisteredUser.Run(mockMessage, mockServiceBusMessageActions.Object);
+    }
 }

@@ -12,8 +12,8 @@ namespace Microservice.Customer.Function.Test.Unit;
 [TestFixture]
 public class AddCustomerFromRegisteredUserMediatrTests
 {
-    private Mock<ICustomerRepository> customerRepositoryMock = new Mock<ICustomerRepository>();
-    private ServiceCollection services = new ServiceCollection();
+    private readonly Mock<ICustomerRepository> customerRepositoryMock = new();
+    private readonly ServiceCollection services = new();
     private ServiceProvider serviceProvider;
     private IMediator mediator;
 
@@ -55,7 +55,7 @@ public class AddCustomerFromRegisteredUserMediatrTests
         var actualResult = await mediator.Send(addCustomerRequest);
         var expectedResult = "Customer Added.";
 
-        Assert.That(actualResult.message, Is.EqualTo(expectedResult));
+        Assert.That(actualResult.Message, Is.EqualTo(expectedResult));
     }
 
     [Test]
@@ -80,10 +80,10 @@ public class AddCustomerFromRegisteredUserMediatrTests
 
     [Test]
     public void Customer_not_added_email_exists_return_exception_fail_message()
-    {   
+    {
         customerRepositoryMock
                 .Setup(x => x.CustomerExistsAsync("InvalidEmail@hotmail.com"))
-                .Returns(Task.FromResult(true));  
+                .Returns(Task.FromResult(true));
 
         var addCustomerRequest = new AddCustomerRequest(Guid.NewGuid(), "InvalidEmail@hotmail.com", "TestSurname", "TestFirstName");
 
@@ -91,9 +91,9 @@ public class AddCustomerFromRegisteredUserMediatrTests
         {
             await mediator.Send(addCustomerRequest);
         });
-         
-        Assert.That(validationException .Errors.Count, Is.EqualTo(1));
-        Assert.That(validationException.Errors.ElementAt(0).ErrorMessage, Is.EqualTo("Customer with this email already exists")); 
+
+        Assert.That(validationException.Errors.Count, Is.EqualTo(1));
+        Assert.That(validationException.Errors.ElementAt(0).ErrorMessage, Is.EqualTo("Customer with this email already exists"));
     }
 
 
@@ -151,10 +151,10 @@ public class AddCustomerFromRegisteredUserMediatrTests
         Assert.That(validationException.Errors.Count, Is.EqualTo(7));
         Assert.That(validationException.Errors.ElementAt(0).ErrorMessage, Is.EqualTo("Email is required."));
         Assert.That(validationException.Errors.ElementAt(1).ErrorMessage, Is.EqualTo("Email length between 8 and 150."));
-        Assert.That(validationException.Errors.ElementAt(2).ErrorMessage, Is.EqualTo("Invalid Email."));    
+        Assert.That(validationException.Errors.ElementAt(2).ErrorMessage, Is.EqualTo("Invalid Email."));
         Assert.That(validationException.Errors.ElementAt(3).ErrorMessage, Is.EqualTo("Surname is required."));
         Assert.That(validationException.Errors.ElementAt(4).ErrorMessage, Is.EqualTo("Surname length between 1 and 30."));
         Assert.That(validationException.Errors.ElementAt(5).ErrorMessage, Is.EqualTo("First name is required."));
         Assert.That(validationException.Errors.ElementAt(6).ErrorMessage, Is.EqualTo("First name length between 1 and 30."));
-    } 
+    }
 }

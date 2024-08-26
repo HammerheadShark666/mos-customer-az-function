@@ -1,3 +1,3 @@
 namespace Microservice.Customer.Function.MediatR.AddCustomer;
 
-public record AddCustomerResponse(string message);
+public record AddCustomerResponse(string Message);
