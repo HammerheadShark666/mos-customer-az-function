@@ -9,35 +9,35 @@ namespace Microservice.Customer.Function.Functions;
 
 public class AddCustomerFromRegisteredUser(ILogger<AddCustomerFromRegisteredUser> logger, IMediator mediator)
 {
-    private ILogger<AddCustomerFromRegisteredUser> _logger { get; set; } = logger; 
+    private ILogger<AddCustomerFromRegisteredUser> _logger { get; set; } = logger;
     private IMediator _mediator { get; set; } = mediator;
-     
+
     [Function(nameof(AddCustomerFromRegisteredUser))]
-    public async Task Run([ServiceBusTrigger("%" + Constants.AzureServiceBusQueueRegisteredUserCustomer + "%",  
+    public async Task Run([ServiceBusTrigger("%" + Constants.AzureServiceBusQueueRegisteredUserCustomer + "%",
                                              Connection = Constants.AzureServiceBusConnection)]
                            ServiceBusReceivedMessage message,
                            ServiceBusMessageActions messageActions)
     {
-        var addCustomerRequest = JsonHelper.GetRequest<AddCustomerRequest>(message.Body.ToArray());            
+        var addCustomerRequest = JsonHelper.GetRequest<AddCustomerRequest>(message.Body.ToArray());
 
         try
-        {               
-            _logger.LogInformation(string.Format("RegisteredUser - AddCustomer - {0}", addCustomerRequest.Id.ToString()));
-             
+        {
+            _logger.LogInformation($"RegisteredUser - AddCustomer - {addCustomerRequest.Id}");
+
             await _mediator.Send(addCustomerRequest);
             await messageActions.CompleteMessageAsync(message);
 
-            return; 
+            return;
         }
         catch (FluentValidation.ValidationException validationException)
-        { 
-            _logger.LogError(String.Format("Validation Failures: Id: {0}", addCustomerRequest.Id.ToString()));
+        {
+            _logger.LogError($"Validation Failures: Id: {addCustomerRequest.Id}");
             await messageActions.DeadLetterMessageAsync(message, null, Constants.FailureReasonValidation, ErrorHelper.GetErrorMessagesAsString(validationException.Errors));
         }
         catch (Exception ex)
-        {  
-            _logger.LogError(String.Format("Internal Error: Id: {0}", addCustomerRequest.Id.ToString())); 
+        {
+            _logger.LogError($"Internal Error: Id: {addCustomerRequest.Id}");
             await messageActions.DeadLetterMessageAsync(message, null, Constants.FailureReasonInternal, ex.Message);
-        } 
-    } 
+        }
+    }
 }

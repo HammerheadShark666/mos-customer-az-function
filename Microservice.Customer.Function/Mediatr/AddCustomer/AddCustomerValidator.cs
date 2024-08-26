@@ -11,16 +11,18 @@ public class AddCustomerValidator : AbstractValidator<AddCustomerRequest>
     {
         _customerRepository = customerRepository;
 
-        RuleFor(registerUserRequest => registerUserRequest).MustAsync(async (registerUserRequest, cancellation) => {
+        RuleFor(registerUserRequest => registerUserRequest).MustAsync(async (registerUserRequest, cancellation) =>
+        {
             return await CustomerIdExists(registerUserRequest.Id);
         }).WithMessage("Customer with this id already exists.");
 
         RuleFor(registerUserRequest => registerUserRequest.Email)
                 .NotEmpty().WithMessage("Email is required.")
                 .Length(8, 150).WithMessage("Email length between 8 and 150.")
-                .EmailAddress().WithMessage("Invalid Email."); 
+                .EmailAddress().WithMessage("Invalid Email.");
 
-        RuleFor(registerUserRequest => registerUserRequest).MustAsync(async (registerUserRequest, cancellation) => {
+        RuleFor(registerUserRequest => registerUserRequest).MustAsync(async (registerUserRequest, cancellation) =>
+        {
             return await EmailExists(registerUserRequest);
         }).WithMessage("Customer with this email already exists");
 
@@ -34,12 +36,12 @@ public class AddCustomerValidator : AbstractValidator<AddCustomerRequest>
     }
 
     protected async Task<bool> EmailExists(AddCustomerRequest registeredUserRequest)
-    { 
+    {
         return !await _customerRepository.CustomerExistsAsync(registeredUserRequest.Email);
     }
 
     protected async Task<bool> CustomerIdExists(Guid customerId)
     {
         return !await _customerRepository.CustomerExistsAsync(customerId);
-    }    
+    }
 }
