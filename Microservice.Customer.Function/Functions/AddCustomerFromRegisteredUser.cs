@@ -12,7 +12,7 @@ public class AddCustomerFromRegisteredUser(ILogger<AddCustomerFromRegisteredUser
 {
     [Function(nameof(AddCustomerFromRegisteredUser))]
     public async Task Run([ServiceBusTrigger("%" + Constants.AzureServiceBusQueueRegisteredUserCustomer + "%",
-                                             Connection = Constants.AzureServiceBusConnection)]
+                                             Connection = Constants.AzureServiceBusConnectionManagedIdentity)]
                            ServiceBusReceivedMessage message,
                            ServiceBusMessageActions messageActions)
     {

@@ -1,17 +1,8 @@
-using FluentValidation;
-using MediatR;
-using Microservice.Customer.Function.Data.Context;
-using Microservice.Customer.Function.Data.Repository;
-using Microservice.Customer.Function.Data.Repository.Interfaces;
-using Microservice.Customer.Function.Helpers;
-using Microservice.Customer.Function.MediatR.AddCustomer;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.Functions.Worker;
-using Microsoft.EntityFrameworkCore;
+using Microservice.Customer.Function.Helpers.Extensions;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Reflection;
 
 var host = new HostBuilder()
     .ConfigureFunctionsWebApplication()
@@ -22,24 +13,18 @@ var host = new HostBuilder()
     })
     .ConfigureServices(services =>
     {
-        services.AddApplicationInsightsTelemetryWorkerService();
-        services.ConfigureFunctionsApplicationInsights();
+        var builder = WebApplication.CreateBuilder(args);
+        var environment = builder.Environment;
 
         var configuration = services.BuildServiceProvider().GetService<IConfiguration>()
                               ?? throw new Exception("Configuration not created.");
 
-        services.AddValidatorsFromAssemblyContaining<AddCustomerValidator>();
-        services.AddMediatR(_ => _.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidatorBehavior<,>));
-        services.AddAutoMapper(Assembly.GetAssembly(typeof(AddCustomerMapper)));
-        services.AddScoped<ICustomerRepository, CustomerRepository>();
-        services.AddSingleton<DefaultData>();
-        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-        services.AddMemoryCache();
-
-        services.AddDbContextFactory<CustomerDbContext>(options =>
-        options.UseSqlServer(configuration.GetConnectionString(Constants.DatabaseConnectionString),
-            options => options.EnableRetryOnFailure()));
+        ServiceExtensions.ConfigureApplicationInsights(services);
+        ServiceExtensions.ConfigureMediatr(services);
+        ServiceExtensions.ConfigureDependencyInjection(services);
+        ServiceExtensions.ConfigureMemoryCache(services);
+        ServiceExtensions.ConfigureSqlServer(services, configuration, environment);
+        ServiceExtensions.ConfigureLogging(services);
     })
     .Build();
 
